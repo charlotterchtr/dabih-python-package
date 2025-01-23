@@ -15,7 +15,7 @@ pip install -e .
 Create a folder named dabih at either ~/.config (create ~/.config if necessary) or at your default XDG_CONFIG_HOME location. In the dabih folder, create a config.yaml file with the following format:
 
 ```yaml
-base_url: "http://localhost:3000/api/v1"
+base_url: "http://localhost:3000"
 token: "your token"
 ```
 
