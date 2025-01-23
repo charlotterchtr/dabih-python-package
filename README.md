@@ -4,6 +4,14 @@ A CLI Tool to interact with the API of the Dabih data storage platform  publishe
 
 #### Installation
 
+**Install from Pypi:**
+
+```bash
+pip install dabih
+```
+
+**Or install in editable mode:**
+
 After cloning this library, you can install the dabih python package via: 
 
 ```bash
