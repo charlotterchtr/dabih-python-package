@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 ### Dabih Python Package
 
 A CLI Tool to interact with the dabih API
@@ -45,19 +44,3 @@ For debugging, use -v:
 ```bash
 dabih -v token-info
 ```
-=======
-# W24 Crichter Dabih
-
-## Getting started
-
-- Get a local development version of dabih [https://github.com/spang-lab/dabih](https://github.com/spang-lab/dabih)
-- Clone the "v2" branch of the dabih repository (https://github.com/spang-lab/dabih/tree/v2)
-- Install NodeJS (https:nodejs.org) and Docker (https://www.docker.com/)
-
-- Test the client at [http://localhost:3000](http://localhost:3000)
-- Read the API docs at [http://localhost:3001](http://localhost:3001)
-
-- OpenAPI
-- Python Packaging
-
->>>>>>> 019cc42 (more error catching)
