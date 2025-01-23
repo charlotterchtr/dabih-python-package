@@ -68,11 +68,12 @@ def get_token_and_base_url(config):
         raise KeyError(f"Missing key in config file: {e}")
     return base_url, token
 
-def get_client():
+def get_client(test=None):
     config_dir = get_config_directory()
     config = load_config(config_dir)
     base_url, token = get_token_and_base_url(config)
-    base_url = base_url+"/api/v1"
+    if not "/api/v1" in base_url:
+        base_url = base_url+"/api/v1"
     pem_files = find_pem_files(config_dir)
 
     client = AuthenticatedClient(base_url=base_url, token=token)

@@ -39,4 +39,4 @@ dependencies = [
 dabih = "dabih.main:main"
 
 [project.urls]
-Homepage = "https://gitlab.spang-lab.de/masterpractical/w24-crichter-dabih"
+Homepage = "https://github.com/charlotterchtr/dabih-python-package"
