@@ -4,7 +4,6 @@ from .config import *
 from .helpers import *
 from dabih.logger import setup_logger, dbg, error
 
-
 @click.group()
 @click.option("-v", "--verbose", is_flag=True, help="Enable verbose output")
 @click.pass_context
@@ -66,7 +65,6 @@ def check(ctx):
 def list_home(ctx):
     client = ctx.obj["client"]
     list_home_func(client)
-
 
 @click.command(
     short_help="List files in a mnemonic",
