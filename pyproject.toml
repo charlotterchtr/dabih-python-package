@@ -13,7 +13,7 @@ include = [
 
 [project]
 name = "dabih"
-version = "0.0.2"
+version = "1.0.0"
 authors = [
     { name = "Charlotte Richter", email = "hedwig-charlotte.richter@stud.uni-regensburg.de" },
 ]

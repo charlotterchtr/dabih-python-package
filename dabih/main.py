@@ -26,7 +26,7 @@ def main(ctx, verbose):
 
 
 @click.command(
-    short_help="Check if token is valid", help="This command will check if token is valid"
+    short_help="Check if current token is valid", help="This command will check if token is valid"
 )
 @click.pass_context
 def token_val(ctx):
@@ -39,7 +39,7 @@ def token_val(ctx):
 
 
 @click.command(
-    short_help="Get token scope info",
+    short_help="Get current token scope info",
     help="This command will return user and role of the token",
 )
 @click.pass_context
@@ -67,7 +67,7 @@ def list_home(ctx):
     list_home_func(client)
 
 @click.command(
-    short_help="List files in a mnemonic",
+    short_help="List all files in specific folder",
     help="enter mnemonic e.g. dabih list-files rufus_shane to see file info or files under directory",
 )
 @click.pass_context
@@ -111,7 +111,7 @@ def download(ctx, mnemonic):
 
 
 @click.command(
-    short_help="Search for file", help="This command will return all search results"
+    short_help="Search for a file or folder", help="This command will return all search results"
 )
 @click.pass_context
 @click.argument("query")
