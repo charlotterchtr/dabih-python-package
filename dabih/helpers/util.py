@@ -22,7 +22,7 @@ def healthy_func(client):
     else:
         return True
 
-def check_status(answer):
+def check_status(answer, context = None):
     dbg("Checking Server Response...")
 
     if answer.status_code == 401:
@@ -37,8 +37,11 @@ def check_status(answer):
 
     elif answer.status_code == 404:
         message = json.loads(answer.content)
-        error(f"Requested dabih file/folder not found: {message['message']}.")
-        warn("Dabih Files/Folders should always be refered to by their mnemonic. \nYou can use dabih search to check the mnemonic")
+        if context == "file_info":
+            error(f"Requested dabih file/folder not found: {message['message']}. Only files, not folders, can be downloaded.")
+        else:
+            error(f"Requested dabih file/folder not found: {message['message']}.")
+            warn("Dabih Files/Folders should always be refered to by their mnemonic. \nYou can use dabih search to check the mnemonic")
         dbg(f"Server Response: {answer.content}")
         sys.exit(0)
 

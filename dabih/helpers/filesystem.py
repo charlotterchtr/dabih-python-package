@@ -55,13 +55,13 @@ def list_files_func(mnemonic, client):
     
 def get_file_info(mnemonic, client):
     answer = file_info.sync_detailed(client = client, mnemonic = mnemonic)
-    check_status(answer)
+    check_status(answer, context= "file_info")
     file = decode_json(answer.content)
     try:
         data = file["data"]
     except KeyError:
         error(f"File {mnemonic} not found, please check the mnemonic")
-        raise KeyError(f"File {mnemonic} not found, please check the mnemonic")
+        sys.exit(0)
     uid = data["uid"]
     size = data["size"]
     key_list = file["keys"]

@@ -1,10 +1,12 @@
 ### Dabih Python Package
 
-A CLI Tool to interact with the API of the Dabih data storage platform  published by the Spang Lab (https://github.com/spang-lab/dabih).
+A Command Line Interface tool to interact with the API of the Dabih Data Storage platform published by the Spang Lab (https://github.com/spang-lab/dabih).
+
+The dabih python package allows you to upload, download, search and list files from the Dabih Data Storage platform, directly from the command line. 
 
 #### Installation
 
-**Install from Pypi:**
+**Install from PyPI:**
 
 ```bash
 pip install dabih
