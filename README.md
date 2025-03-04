@@ -45,12 +45,20 @@ dabih
 ```
 Example for uploading or downloading a file:
 ```bash
-dabih upload <filename> <target_folder_mnemonic>
-dabih upload <filename>
+dabih upload <path_to_file>
+dabih upload <path_to_file> <target_folder_mnemonic>
 dabih download <mnemonic>
+dabih download <mnemonic> <path_to_target_folder>
+```
+If no target folder is specified upon upload, the file will be saved in your dabih home directory.
+If no target folder is specified upon download, the file will be saved in your current directory.
+
+For additional help, use --help, e.g.:
+```bash
+dabih download --help
 ```
 
-For debugging, use -v:
+For debugging, use -v, e.g.:
 ```bash
 dabih -v token-info
 ```

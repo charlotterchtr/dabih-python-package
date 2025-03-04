@@ -18,7 +18,7 @@ def get_user_info(client):
         error(f"Connection error: Please check the URL in config file or whether the server is running. \n Required format of base_url: http://<ip>:<port>")
         sys.exit(0)
     except:
-        error(f"Connection error: Please check the URL in config file or whether the server is running. \n Required format of base_url: http://<ip>:<port>")
+        error(f"Unknown connection error: Please check the URL in config file or whether the server is running. \n Required format of base_url: http://<ip>:<port>")
         sys.exit(0)
     check_status(answer)
 

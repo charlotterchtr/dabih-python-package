@@ -5,6 +5,7 @@ from ..logger import dbg, warn, log, error
 from .util import check_status
 from cryptography.hazmat.primitives import serialization
 import sys
+import os
 
 __all__ = ["find_key", "download_func"]
 
@@ -37,25 +38,32 @@ def find_key(key_list, pem_files):
     return None
 
 
-def download_func(mnemonic, client, pem_files):
+def download_func(mnemonic, client, pem_files, target_dir = None):
     log(f"Starting download for mnemonic: {mnemonic}")
     file, uid, key_list, size = get_file_info(mnemonic, client)
     if not pem_files:
-        error("No valid key files found. You need your private key to download files. \nDownload aborted.")
+        error("No valid key files found. You need your private key to download files. \nDownload aborted.\nPlease check the README for instructions on where to store your private key.")
         sys.exit(0)
-    private_key, public_key = find_key(key_list, pem_files)
+    private_key, aes_key_info = find_key(key_list, pem_files)
     
     if not private_key:
-        error("No private key  found for requested file. Please check your key files.")
+        error("No private key found for requested file. Please check your key files.")
         sys.exit(0)
 
-    encrypted_aes_key = public_key["key"]
+    encrypted_aes_key = aes_key_info["key"]
     aes_key = decrypt.decrypt_aes_key(encrypted_aes_key, private_key)
 
     start = 0
     size = float(size)
 
-    with open(file["fileName"], "wb") as f:
+    file_name = file["fileName"]
+    if target_dir:
+        os.makedirs(target_dir, exist_ok=True)
+        file_path = os.path.join(target_dir, file_name)
+    else:
+        file_path = file_name
+    
+    with open(file_path, "wb") as f:
         log("Downloading... 0%")
         for chunk in file["chunks"]:
 
@@ -63,18 +71,19 @@ def download_func(mnemonic, client, pem_files):
             chunk_response = download_chunk.sync_detailed(uid=uid, hash_=chunk_hash, client=client)
             check_status(chunk_response)
             encrypted_chunk = chunk_response.content
-            n = len(encrypted_chunk)
-
+        
             iv = b64.decode(chunk["iv"])
             decrypted_chunk = decrypt.decrypt_file_chunk(encrypted_chunk, aes_key, iv)
-        
+            n = len(decrypted_chunk)
+
             f.write(decrypted_chunk)
 
             last_percent = (start * 100) // size
             start += n
             percent = (start * 100) // size
             if percent != last_percent:
-                print(f"{percent}%", end=" \n")
+                log(f"{percent}%  ")
                 sys.stdout.flush()
 
-    log("Download finished.")
+    absolute_file_path = os.path.abspath(file_path)
+    log(f"Download finished.\nFile saved to {absolute_file_path}")

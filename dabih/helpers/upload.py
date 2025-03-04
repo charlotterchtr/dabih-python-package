@@ -17,12 +17,14 @@ from ..logger import dbg, warn, log, error
 from io import BytesIO
 from pathlib import Path
 import sys
+import os
 
 
 __all__ = ["upload_func"]
 
-def start_upload_func(file_name, size, client, directory = None):
-    
+def start_upload_func(file_path, size, client, directory = None):
+
+    file_name = os.path.basename(file_path)
     if directory is None: 
         body = UploadStartBody(file_name=file_name, size=size)
     else:
@@ -34,7 +36,6 @@ def start_upload_func(file_name, size, client, directory = None):
     return answer
 
 def upload_chunk(mnemonic, chunk_data, start, end, total_size, client):
-    
     
     log(f"Preparing to upload chunk from {start} to {end}")
 
@@ -62,7 +63,8 @@ def finish_upload_func(mnemonic, client):
 
     answer = finish_upload.sync_detailed(client=client, mnemonic=mnemonic)
     check_status(answer)
-    return answer
+    result_hash = decode_json(answer.content)["data"]["hash"]
+    return result_hash
 
 
 def upload_func(filepath, client, target_directory=None):
@@ -82,7 +84,7 @@ def upload_func(filepath, client, target_directory=None):
         while True:
             chunk_data = f.read(chunk_size)
             n = len(chunk_data)
-            if n == 0:  # break while loop if no data left
+            if n == 0:
                 break
             end = start + n - 1
             chunk_answer = upload_chunk(
@@ -92,18 +94,17 @@ def upload_func(filepath, client, target_directory=None):
             start += n
             percent = (start * 100) // total_size
             if percent != last_percent:
-                print(f"{percent}%", end=" ")
+                log(f"{percent}%  ")
                 sys.stdout.flush()
             chunk_hash = decode_json(chunk_answer.content)["hash"]
             hashes.append(chunk_hash)
             dbg(f"hashlist from server: {hashes}")
 
-    result_answer = finish_upload_func(mnemonic, client)
-    result_hash = decode_json(result_answer.content)["data"]["hash"]
-
+    result_hash = finish_upload_func(mnemonic, client)
+    
     full_hash = hash.get_full_chunk_hash(hashes)
     if result_hash != full_hash:
-        raise Exception(
-            f"Upload failed: hashes do not match: {result_hash} != {full_hash}"
+        error(
+            f"Upload failed: Hashes do not match: {result_hash} != {full_hash}"
         )
-    log("\nUpload finished.")
+    log("Upload finished.")

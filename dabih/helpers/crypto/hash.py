@@ -21,7 +21,6 @@ def get_chunk_hash(chunk_data):
     sha256_hash = hashlib.sha256(chunk_data).digest()
     return b64_encode(sha256_hash)
 
-
 def get_full_chunk_hash(hash_list):
     hash = hashlib.sha256()
     for b64 in hash_list:

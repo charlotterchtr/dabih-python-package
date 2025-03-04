@@ -65,7 +65,7 @@ def get_token_and_base_url(config):
         token = config.get("token")
     except KeyError as e:
         error(f"Missing key in config file: {e}")
-        raise KeyError(f"Missing key in config file: {e}")
+        sys.exit(0)
     return base_url, token
 
 def get_client(test=None):

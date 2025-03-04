@@ -63,6 +63,9 @@ def check_status(answer, context = None):
     elif answer.status_code == 200:
         dbg(f"Server Status Code: {answer.status_code}")
         dbg(f"Server Response: {answer.content}")
+        if answer.content == b'[]':
+            error("Folder is either empty or does not exist, please check the mnemonic")
+            sys.exit(0)
         return True
     
     elif answer.status_code == 201:

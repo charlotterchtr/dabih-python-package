@@ -19,18 +19,19 @@ import sys
 
 __all__ = ["list_home_func", "list_files_func", "get_file_info", "search_func"]
 
+def print_file_structure(items, indent=0):
+    for item in items:
+        print(f"{'    ' * indent}{item['name']:<30}\t{item['mnemonic']}")
+        if 'children' in item:
+            print_file_structure(item['children'], indent + 1)
+    return None
+
 def list_home_func(client):
     
     answer = list_home.sync_detailed(client=client)
     check_status(answer)
     response_json = decode_json(answer.content)
     
-    def print_structure(items, indent=0):
-        for item in items:
-            print(f"{'    ' * indent}{item['name']:<30}\t{item['mnemonic']}")
-            if 'children' in item:
-                print_structure(item['children'], indent + 1)
-
     parents = response_json.get('parents', [])
     children = response_json.get('children', [])
 
@@ -42,8 +43,9 @@ def list_home_func(client):
                 parent_map[parent_id]['children'] = []
             parent_map[parent_id]['children'].append(child)
 
-    print("Home Directory Structure:")
-    print_structure(parents)
+    log("\nHome Directory Structure:\n")
+    print_file_structure(parents)
+    print("")
 
     return None
 
@@ -51,7 +53,16 @@ def list_files_func(mnemonic, client):
 
     answer = list_files.sync_detailed(client=client, mnemonic=mnemonic)
     check_status(answer)
-    return answer
+    response_json = decode_json(answer.content)
+    if response_json[0]["mnemonic"] == mnemonic:
+        warn(f"{mnemonic} refers to a file, not to a folder")
+        sys.exit(0)
+
+    log(f"\nFolder content of: {mnemonic}:\n")
+    print_file_structure(response_json)
+    print("")
+
+    return None
     
 def get_file_info(mnemonic, client):
     answer = file_info.sync_detailed(client = client, mnemonic = mnemonic)
@@ -65,6 +76,7 @@ def get_file_info(mnemonic, client):
     uid = data["uid"]
     size = data["size"]
     key_list = file["keys"]
+
     return data, uid, key_list, size
 
 def search_fs_func(client, query):
@@ -74,6 +86,7 @@ def search_fs_func(client, query):
     check_status(answer)
     decoded_answer = decode_json(answer.content)
     job_id = decoded_answer["jobId"]
+    
     return job_id
 
 def search_results_func(client, job_id):
